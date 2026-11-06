@@ -1,5 +1,9 @@
 # Publish TANF Across America
 
+Public dashboard: https://tanf-across-america.streamlit.app/
+
+Deployed to Streamlit Community Cloud on November 6, 2026, with Python 3.12. Public viewing is enabled; the source GitHub repository remains private. Streamlit has been authorized to access the source repository.
+
 ## Deployment settings
 
 - Hosting: Streamlit Community Cloud (https://share.streamlit.io/).
@@ -41,3 +45,7 @@ The map uses publicly accessible Plotly browser resources. If those resources ar
 - Localhost link does not work on another computer: share the assigned Streamlit URL instead.
 
 Official guide: https://docs.streamlit.io/deploy/streamlit-community-cloud/deploy-your-app/deploy
+
+## Dependency maintenance
+
+The first cloud build reported that pandas 3.0.4 was withdrawn due to datetime-related crashes. The deployment now pins the supported maintenance release pandas 3.0.6. Validate changes with the dashboard tests before updating dependency pins.

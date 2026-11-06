@@ -1,5 +1,9 @@
 # TANF Across America
 
+**[Open the public dashboard](https://tanf-across-america.streamlit.app/)**
+
+[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://tanf-across-america.streamlit.app/)
+
 A public-facing Streamlit dashboard for monthly TANF cash-assistance caseloads in the 50 states, using only data published by the federal U.S. Department of Health and Human Services, Administration for Children and Families (HHS/ACF).
 
 State filters select state-level observations in the federal workbooks. State-published datasets are outside the project scope. Additional measures must come from federal sources and remain unavailable when those sources do not support them.
@@ -48,7 +52,7 @@ To publish the interactive dashboard, sign in to [Streamlit Community Cloud](htt
 | Python version (Advanced settings) | `3.12` |
 | Secrets | Leave empty |
 
-See [the deployment guide](docs/DEPLOYMENT.md) for the publishing and public-sharing steps. The public dashboard URL is assigned by Streamlit after deployment; `http://localhost:8501/` is only for local use.
+See [the deployment guide](docs/DEPLOYMENT.md) for the publishing and public-sharing steps. The deployed dashboard is public at https://tanf-across-america.streamlit.app/. Viewers do not need access to the source repository or the author's computer. `http://localhost:8501/` is only for local use.
 
 After deployment, pushes to `main` update the hosted app automatically. Keep the aggregate workbooks in `data/raw/`; refresh them locally with `python scripts/download_data.py`, validate them, and commit the refreshed files when needed.
 
