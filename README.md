@@ -1,10 +1,18 @@
 # TANF Across America
 
-Dashboard on TANF information in the US. A public-facing Streamlit dashboard for monthly TANF cash-assistance caseloads in the 50 states.
+A public-facing Streamlit dashboard for monthly TANF cash-assistance caseloads in the 50 states, using only data published by the federal U.S. Department of Health and Human Services, Administration for Children and Families (HHS/ACF).
+
+State filters select state-level observations in the federal workbooks. State-published datasets are outside the project scope. Additional measures must come from federal sources and remain unavailable when those sources do not support them.
+
+## Explore the dashboard
+
+The dashboard starts with no selection and zero metrics. Choose a Census region to view combined monthly counts and average monthly caseloads for its states, or choose an individual state. "All regions" combines all 50 states. Click any state on the map to view that state. "Clear state / reset" clears both selectors, resets metrics to zero, and empties the chart and monthly table. Clearing the state selector also resets the display.
+
+The map loads Plotly and geographic boundaries in the browser; the sidebar remains available if those resources cannot load. Regional counts use only the 50 states in the federal workbooks (excluding D.C.).
 
 ## Run locally
 
-Python 3.10 or newer is recommended.
+Use Python 3.12 for Streamlit Community Cloud. The dashboard is also tested locally with Python 3.14. Runtime package versions are pinned in `requirements.txt`.
 
 ```powershell
 python -m venv .venv
@@ -24,10 +32,24 @@ python -m pytest -q
 
 The dashboard checks required columns, duplicate observations, nonnegative integer counts, the identity `total recipients = adults + children`, and 12 reported months per fiscal year before rendering.
 
-## Deploy to Streamlit Community Cloud
+## GitHub and public hosting
 
-1. Push this project to a public GitHub repository.
-2. In [Streamlit Community Cloud](https://share.streamlit.io/), create an app from the repository, select `app.py`, and deploy. Cloud installs the runtime packages from `requirements.txt`.
-3. Keep the aggregate workbooks in `data/raw/` or run `python scripts/download_data.py` locally before committing refreshed official workbooks.
+Source repository: [fernandoerler-belo/TANF_dashboard](https://github.com/fernandoerler-belo/TANF_dashboard).
 
-No secrets, credentials, or personal records are used. See [data coverage and definitions](docs/DATA_COVERAGE.md) before extending the measures.
+The repository includes the dashboard, clickable state map, federal data workbooks, tests, and Streamlit configuration. No API keys or secrets are required. Downloading the source code does not require access to the author's computer.
+
+To publish the interactive dashboard, sign in to [Streamlit Community Cloud](https://share.streamlit.io/) with the GitHub account that owns the repository and create an app with these settings:
+
+| Setting | Value |
+| --- | --- |
+| Repository | `fernandoerler-belo/TANF_dashboard` |
+| Branch | `main` |
+| Main file path | `app.py` |
+| Python version (Advanced settings) | `3.12` |
+| Secrets | Leave empty |
+
+See [the deployment guide](docs/DEPLOYMENT.md) for the publishing and public-sharing steps. The public dashboard URL is assigned by Streamlit after deployment; `http://localhost:8501/` is only for local use.
+
+After deployment, pushes to `main` update the hosted app automatically. Keep the aggregate workbooks in `data/raw/`; refresh them locally with `python scripts/download_data.py`, validate them, and commit the refreshed files when needed.
+
+No secrets, credentials, or personal records are used. See [data coverage and definitions](docs/DATA_COVERAGE.md) for the federal-only scope and supported measures.

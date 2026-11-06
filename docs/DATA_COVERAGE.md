@@ -1,4 +1,6 @@
-# Stage 1 data coverage
+# Federal data coverage
+
+Only federally published HHS/ACF data is used. State-level observations from federal workbooks remain in scope; state-published files, agency reports, and open-data sources are excluded. Unsupported measures remain unavailable.
 
 ## Federal sources used
 
@@ -18,8 +20,9 @@ ACF describes the characteristics release as covering demographic information fo
 | Monthly total recipients | Caseload workbook, monthly state counts | Chart and average; a recipient is an individual reported in a TANF assistance unit. |
 | Monthly adults and children | Separate monthly counts in caseload workbook | Chart as distinct recipient subgroups. Total recipients are checked against adults plus children. |
 | Monthly families | Separate monthly family caseload in workbook | Separate family chart and average; families are not presented as people. |
-| Average monthly cash assistance per recipient | Not reported in the federal source at person grain. The characteristics release reports per-family assistance. | Explicitly unavailable. The dashboard separately labels the supported FY2024 national value as $673 per family per month; it does not divide family benefits by recipients or substitute total program spending. |
-| Average recipient age | Characteristics report has age bands, not exact individual ages or an exact mean. | Explicitly unavailable. No midpoint or other estimate is calculated. |
+| Average child recipients per assistance family | Derived from the federal monthly child recipient and family caseload counts | Sum child recipient counts across the selected months and states, divided by the matching sum of family counts, using unrounded values. Includes assistance families with no adult recipient; it does not measure all household children. Unavailable if the family denominator is zero. |
+| Average monthly cash assistance per recipient | Not reported in the federal source at person grain. The characteristics release reports per-family assistance. | Not displayed. The dashboard omits this measure; it does not divide family benefits by recipients or substitute total program spending. |
+| Average recipient age | Characteristics report has age bands, not exact individual ages or an exact mean. | Not displayed. No midpoint or other estimate is calculated. |
 | Demographic filters in combination | Characteristics are published in separate aggregate tables, with differing populations and no joint person-level records. | Not implemented. No demographic intersections or cross-filtering. |
 
 **Definitions and period labels:** FY means October 1 through September 30. The monthly figures are the reported caseload for each month, not a count of unique people over the year. Families are TANF assistance units reported in the family tables; adult and child recipients are people in the recipient tables. The dashboard uses TANF-only workbooks, not combined TANF and Separate State Program (SSP)-MOE totals. ACF’s [TANF data report instructions and definitions](https://acf.gov/sites/default/files/documents/ofa/acf-199209-TANFSSP-data-report-instructions-valid-thru-2028-12.pdf) contain field-level federal reporting definitions.
@@ -29,18 +32,19 @@ ACF describes the characteristics release as covering demographic information fo
 1. Run `python scripts/download_data.py`. It fetches the four official `.xlsx` files from the URLs listed in the script and this document.
 2. The script downloads to a `.part` file, checks that the response is an Excel/ZIP workbook, then atomically replaces the local file. Network, HTTP, and file-format errors stop the refresh explicitly.
 3. Run `python -m pytest -q`; the loader checks sheet headers, fiscal-year month columns, state/month uniqueness, nonnegative integer values, recipient subtotal consistency, and 12 months per fiscal year.
-4. Review the ACF release page for a new year or revised workbook before adding it. Update the manifest, tests, coverage table, and dashboard metric labels together. Do not mix SSP-MOE with TANF or assume revised definitions are comparable.
+4. Review the ACF release page for a new year or revised workbook before adding it. Update the federal download catalog, loader, tests, coverage table, and dashboard metric labels together. Do not mix SSP-MOE with TANF or assume revised definitions are comparable.
 
-## Later-stage coverage plan
+## Future federal coverage
 
-| Later topic | Federal availability and limitation | Official state-level sources to investigate |
-|---|---|---|
-| County detail | The ACF caseload and characteristics workbooks used here publish state, not county, estimates. Federal aggregates cannot be allocated to counties. | State TANF agency administrative reports and state open-data portals; request county caseload aggregates from the state agency where not published. Find the appropriate agency via ACF's [State TANF page](https://acf.gov/ofa/programs-services/TANF/state) and [USAGov's state social services directory](https://www.usa.gov/state-social-services). Record each state's source, definition, suppression rules, and release cadence before combining. |
-| Reported sex/gender | FY2024 characteristics tables report adult and child counts in male/female categories separately; they do not supply joint cross-tabs for other characteristics. These categories are reported fields and should not be relabeled as gender identity. | State TANF agency aggregate administrative reports for more current or locally detailed published categories. |
-| Age | Federal report supplies age groups separately for adult and child recipients, not exact ages or a validated exact mean. | State TANF agency aggregate tables; retain their age bands and population/period labels. |
-| Family size | Federal tables report counts by assistance-unit size and number of recipients, at state and annual grain. They do not establish county-level detail. | State TANF agency caseload reports for county/locality breakouts. |
-| Education | Federal characteristics tables include adult educational-attainment categories and separate child education reporting. It is annual and separately tabulated. | State TANF agency administrative reports where published; confirm denominator and collected/not-known categories. |
-| Cumulative countable months | Federal reports include time-limit categories, but categories are not a complete person-level monthly history and federal/state rules may differ. | State agency time-limit policy/administrative reports and the agency's published state TANF plan; request only de-identified, aggregate duration distributions. |
-| Time-limit status | The federal characteristics report includes federal time-limit-related categories and exemption status, but does not fully capture all state policies, exceptions, extensions, or case histories. | State TANF plan and official agency policy/manuals, extension/exemption reports, and state administrative reporting. Document state-specific clocks and exceptions before comparing. |
+Future additions must use federal publications, retain the published population and period, and preserve the limits of aggregate tables.
 
-For official policy documents, use ACF's [State TANF page](https://acf.gov/ofa/programs-services/TANF/state) and [state TANF policy instructions](https://acf.gov/ofa/policy-guidance/policy-instructions/state-tanf-policy) alongside the corresponding state agency's own published materials. A later analysis of duration or time-limit status must account for exclusions, exemptions, extensions, and state rules. Reaching a time limit is not evidence of improper receipt; demographic characteristics must not be used to infer misuse.
+| Topic | Federal availability and limitation |
+|---|---|
+| County detail | The bundled ACF workbooks publish state-level data. County detail remains unavailable. |
+| Reported sex | FY2024 characteristics tables report male/female categories separately for adults and children; these fields are not gender identity or joint cross-tabs. |
+| Age | Separate adult and child age bands are available; an exact average age is not supported. |
+| Family size | Annual state-level assistance-unit size tables are available; these are separate from monthly caseloads. |
+| Education | Annual adult attainment and child education tables have separate populations and denominators. |
+| Countable months and time-limit status | Published federal categories do not provide individual histories or fully describe state-specific clocks, exemptions, and extensions. |
+
+The characteristics workbook is preserved for future federal-table integration. The current dashboard displays monthly caseloads only. Separate demographic tables must not be combined into unsupported intersections. Reaching a time limit is not evidence of improper receipt; demographic characteristics must not be used to infer misuse.
